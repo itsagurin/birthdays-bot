@@ -49,6 +49,7 @@ async def main():
     finally:
         # Закрытие соединений
         await bot.session.close()
+        await db.close()
         if hasattr(scheduler, 'stop'):
             scheduler.stop()
 

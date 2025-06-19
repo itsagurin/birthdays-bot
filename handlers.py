@@ -129,7 +129,7 @@ async def process_date(message: Message, state: FSMContext):
 @router.callback_query(F.data.startswith("add_gifts_"))
 async def add_gifts_start(callback: CallbackQuery, state: FSMContext):
     """Начало добавления идей подарков"""
-    birthday_id = int(callback.data.split("_")[2])
+    birthday_id = callback.data.split("_")[2]
     temp_birthday_data[callback.from_user.id] = birthday_id
 
     await callback.message.edit_text(
@@ -198,7 +198,7 @@ async def list_birthdays(callback: CallbackQuery):
 @router.callback_query(F.data.startswith("birthday_"))
 async def show_birthday_details(callback: CallbackQuery):
     """Показать детали дня рождения"""
-    birthday_id = int(callback.data.split("_")[1])
+    birthday_id = callback.data.split("_")[1]
     birthday = await db.get_birthday_by_id(birthday_id)
 
     if not birthday:
@@ -217,7 +217,7 @@ async def show_birthday_details(callback: CallbackQuery):
 @router.callback_query(F.data.startswith("gifts_"))
 async def show_gifts(callback: CallbackQuery):
     """Показать идеи подарков"""
-    birthday_id = int(callback.data.split("_")[1])
+    birthday_id = callback.data.split("_")[1]
     birthday = await db.get_birthday_by_id(birthday_id)
 
     if not birthday:
@@ -241,7 +241,7 @@ async def show_gifts(callback: CallbackQuery):
 @router.callback_query(F.data.startswith("edit_gifts_"))
 async def edit_gifts_start(callback: CallbackQuery, state: FSMContext):
     """Начало редактирования идей подарков"""
-    birthday_id = int(callback.data.split("_")[2])
+    birthday_id = callback.data.split("_")[2]
     temp_birthday_data[callback.from_user.id] = birthday_id
 
     await callback.message.edit_text(
@@ -274,7 +274,7 @@ async def process_edit_gifts(message: Message, state: FSMContext):
 @router.callback_query(F.data.startswith("add_reminder_"))
 async def add_reminder_start(callback: CallbackQuery):
     """Начало добавления напоминания"""
-    birthday_id = int(callback.data.split("_")[2])
+    birthday_id = callback.data.split("_")[2]
     temp_reminder_data[callback.from_user.id] = birthday_id
 
     await callback.message.edit_text(
@@ -307,7 +307,7 @@ async def process_reminder_days(callback: CallbackQuery):
 @router.callback_query(F.data.startswith("reminders_"))
 async def show_reminders(callback: CallbackQuery):
     """Показать напоминания для дня рождения"""
-    birthday_id = int(callback.data.split("_")[1])
+    birthday_id = callback.data.split("_")[1]
     birthday = await db.get_birthday_by_id(birthday_id)
     reminders = await db.get_reminders(birthday_id)
 
@@ -339,7 +339,7 @@ async def show_reminders(callback: CallbackQuery):
 @router.callback_query(F.data.startswith("delete_"))
 async def confirm_delete_birthday(callback: CallbackQuery):
     """Подтверждение удаления дня рождения"""
-    birthday_id = int(callback.data.split("_")[1])
+    birthday_id = callback.data.split("_")[1]
     birthday = await db.get_birthday_by_id(birthday_id)
 
     if not birthday:
@@ -357,7 +357,7 @@ async def confirm_delete_birthday(callback: CallbackQuery):
 @router.callback_query(F.data.startswith("confirm_delete_"))
 async def delete_birthday_confirmed(callback: CallbackQuery):
     """Подтвержденное удаление дня рождения"""
-    birthday_id = int(callback.data.split("_")[2])
+    birthday_id = callback.data.split("_")[2]
 
     await db.delete_birthday(birthday_id, callback.from_user.id)
 
