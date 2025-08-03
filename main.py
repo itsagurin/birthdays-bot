@@ -1,7 +1,11 @@
 import asyncio
 import logging
+import threading
+import os
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
+from fastapi import FastAPI
+import uvicorn
 
 from config import BOT_TOKEN
 from database import db
@@ -15,10 +19,20 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# FastAPI приложение для health check
+app = FastAPI()
 
-async def main():
-    """Главная функция запуска бота"""
+@app.get('/')
+async def health_check():
+    return {'status': 'ok'}
 
+
+def run_web():
+    port = int(os.environ.get('PORT', 8000))
+    uvicorn.run('main:app', host='0.0.0.0', port=port, log_level='info')
+
+async def start_bot():
+    """Запуск логики Telegram-бота"""
     # Инициализация бота и диспетчера
     bot = Bot(token=BOT_TOKEN)
     storage = MemoryStorage()
@@ -50,13 +64,17 @@ async def main():
         # Закрытие соединений
         await bot.session.close()
         await db.close()
-        if hasattr(scheduler, 'stop'):
+        if 'scheduler' in locals() and hasattr(scheduler, 'stop'):
             scheduler.stop()
 
-
 if __name__ == '__main__':
+    # Запускаем веб-сервер в отдельном потоке (для UptimeRobot)
+    web_thread = threading.Thread(target=run_web, daemon=True)
+    web_thread.start()
+
+    # Запускаем бота
     try:
-        asyncio.run(main())
+        asyncio.run(start_bot())
     except KeyboardInterrupt:
         logger.info("Бот остановлен пользователем")
     except Exception as e:
