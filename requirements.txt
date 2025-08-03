@@ -1,6 +1,6 @@
-pip>=23.3
 setuptools>=68.0
 wheel
+pip>=24.0
 
 --prefer-binary
 
