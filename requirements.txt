@@ -4,8 +4,8 @@ pip>=24.0
 
 --prefer-binary
 
-aiogram==3.2.0
-pydantic==1.10.15
+aiogram==3.3.0
+pydantic
 fastapi==0.95.2
 uvicorn==0.22.0
 motor==3.3.2
