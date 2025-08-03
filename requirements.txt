@@ -6,7 +6,7 @@ pip>=24.0
 
 aiogram==3.3.0
 pydantic
-fastapi==0.95.2
+fastapi
 uvicorn==0.22.0
 motor==3.3.2
 python-dotenv==1.0.0
